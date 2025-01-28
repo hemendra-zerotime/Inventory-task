@@ -17,6 +17,18 @@ export const productRules = [
         .withMessage("Stock is require")
 ]
 
+export const validationRulesSignUp = [
+    body("username")
+        .isLength({ min: 5 })
+        .withMessage("username must be of minimum five character"),
+    body("email")
+        .isEmail()
+        .withMessage("please enter valid email"),
+    body("password")
+        .isLength({ min: 8, max: 14 })
+        .withMessage("password must be of 8 or less than 14")
+];
+
 export const Validate = (req: Request, res: Response, next: NextFunction) => {
 
     const err = validationResult(req)
@@ -27,3 +39,4 @@ export const Validate = (req: Request, res: Response, next: NextFunction) => {
         next()
     }
 };
+
