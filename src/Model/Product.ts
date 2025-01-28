@@ -13,19 +13,22 @@ interface IProduct {
 const productSchema: Schema = new Schema<IProduct>({
     name: {
         type: String,
-        require: true
+        unique: true,
+        required: [true, "Please Enter Name!"],
+        minlength: [5, "must be min of 5 character"]
     },
     category: {
         type: String,
-        require: true
+        required: [true, "Please Enter Category!"],
+        minlength: [5, "must be min of 5 character"]
     },
     price: {
         type: Number,
-        require: true
+        required: [true, "Please Enter Price!"]
     },
     stock: {
         type: Number,
-        require: true
+        required: [true, "Please Enter stock!"]
     },
     createdAt: {
         type: Date

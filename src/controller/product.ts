@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Product from "../Model/Product";
+import { Timestamp } from "mongodb";
 
 export const addProduct = async (req: Request, res: Response) => {
     const { name, category, price, stock } = req.body;
@@ -9,7 +10,7 @@ export const addProduct = async (req: Request, res: Response) => {
             category: category,
             price: price,
             stock: stock,
-            createdAt: Date.now(),
+            createdAt: Date.now()
         });
         await newProduct.save();
         res.status(201).json({
@@ -17,7 +18,9 @@ export const addProduct = async (req: Request, res: Response) => {
             newProduct,
         });
     } catch (error) {
-        console.log(error);
+        if (error instanceof Error)
+            if (error.message.split(" ")[0] === "E11000")
+                res.status(400).json({ message: "Product already in stock" })
     }
 };
 
@@ -60,16 +63,23 @@ export const deleteProductById = async (req: Request, res: Response) => {
         });
     } catch (error) {
         res.status(404).json({
-            message: `Failed to delete`
+            message: `Product not found to delete`
         })
     }
 };
 
-export const updateProduct = (req: Request, res: Response) => {
+export const updateProduct = async (req: Request, res: Response) => {
     const { id } = req.params;
+    const { name, category, price, stock } = req.body;
     try {
-
+        const data = await Product.updateOne({ _id: id }, { $set: { name, category, price, stock, updatedAt: Date.now() } });
+        if (data.modifiedCount === 0) throw Error
+        res.status(200).json({
+            message: "Product data has been updated"
+        })
     } catch (error) {
-
+        res.status(200).json({
+            message: "Error in update"
+        })
     }
 }

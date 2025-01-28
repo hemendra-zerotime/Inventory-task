@@ -1,9 +1,9 @@
 import express from "express"
-import { addProduct, deleteProductById, viewAllProduct, viewProductById } from "../controller/product"
+import { addProduct, deleteProductById, updateProduct, viewAllProduct, viewProductById } from "../controller/product"
+import { Validate, productRules } from "../Middleware/productValidate"
 const router = express.Router()
-
-router.route("/products").get(viewAllProduct).post(addProduct)
-router.route("/products/:id").get(viewProductById).put().delete(deleteProductById)
+router.route("/products").get(viewAllProduct).post(productRules, Validate, addProduct)
+router.route("/products/:id").get(viewProductById).put(productRules, Validate, updateProduct).delete(deleteProductById)
 
 
 export default router
