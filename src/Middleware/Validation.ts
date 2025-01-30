@@ -15,8 +15,17 @@ export const productRules = [
     body("stock")
         .notEmpty()
         .withMessage("Stock is require")
-]
 
+]
+export const validationRulesLogIn = [
+    body("email")
+        .isEmail()
+        .withMessage("please enter valid email"),
+    body("password")
+        .notEmpty()
+        .withMessage("please enter password")
+
+];
 export const validationRulesSignUp = [
     body("username")
         .isLength({ min: 5 })
@@ -25,8 +34,12 @@ export const validationRulesSignUp = [
         .isEmail()
         .withMessage("please enter valid email"),
     body("password")
-        .isLength({ min: 8, max: 14 })
-        .withMessage("password must be of 8 or less than 14")
+        .isLength({ min: 6, max: 10 })
+        .withMessage("Password lenght must be in 6-10"),
+    body("role")
+        .optional()
+        .isIn(["user", "admin"])
+        .withMessage("role should be user or admin")
 ];
 
 export const Validate = (req: Request, res: Response, next: NextFunction) => {

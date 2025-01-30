@@ -1,15 +1,21 @@
-import { Schema, model } from "mongoose";
-
-interface IUser {
+import { Schema, model, Document } from "mongoose";
+enum Role {
+    user = "user",
+    admin = "admin"
+}
+interface IUser extends Document {
     username: String,
     email: String,
     password: String,
     registeredAt: Date,
     updatedAt: Date
+    role: Role
+
 }
 
 
-const userSchema: Schema = new Schema<IUser>({
+
+const userSchema = new Schema<IUser>({
     username: {
         type: String,
         required: [true, "Please Enter Name!"],
@@ -21,10 +27,13 @@ const userSchema: Schema = new Schema<IUser>({
         required: [true, "Please Enter Email!"],
     },
     password: {
-        type: Number,
+        type: String,
         required: [true, "Please Enter password!"]
     },
-
+    role: {
+        type: String,
+        default: Role.user
+    },
     registeredAt: {
         type: Date
     },

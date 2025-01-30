@@ -3,10 +3,12 @@ import "dotenv/config"
 import productRoute from "./Router/product"
 import { dbConnect } from "./db/connection"
 import cors from "cors"
+import cookieParse from "cookie-parser"
 import userRoute from "./Router/user"
 const Port = process.env.PORT
 const app = express()
 app.use(express.urlencoded())
+app.use(cookieParse())
 app.use(cors())
 dbConnect()
 app.use("/api", userRoute)

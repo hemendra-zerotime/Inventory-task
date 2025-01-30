@@ -1,18 +1,17 @@
 import { Request, Response } from "express";
 import Product from "../Model/Product";
-import { Timestamp } from "mongodb";
+
 
 export const addProduct = async (req: Request, res: Response) => {
     const { name, category, price, stock } = req.body;
     try {
-        const newProduct = await new Product({
+        const newProduct = await Product.create({
             name: name,
             category: category,
             price: price,
             stock: stock,
             createdAt: Date.now()
         });
-        await newProduct.save();
         res.status(201).json({
             message: `Product has been added`,
             newProduct,
@@ -20,7 +19,7 @@ export const addProduct = async (req: Request, res: Response) => {
     } catch (error) {
         if (error instanceof Error)
             if (error.message.split(" ")[0] === "E11000")
-                res.status(400).json({ message: "Product already in stock" })
+                res.status(409).json({ message: "Product already in stock" })
     }
 };
 
