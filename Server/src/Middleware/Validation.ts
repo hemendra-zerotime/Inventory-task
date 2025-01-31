@@ -43,7 +43,7 @@ export const validationRulesSignUp = [
 ];
 
 export const Validate = (req: Request, res: Response, next: NextFunction) => {
-
+    console.log(req.body)
     const err = validationResult(req)
     if (!err.isEmpty()) {
         res.status(400).json({ validationError: err.array() })

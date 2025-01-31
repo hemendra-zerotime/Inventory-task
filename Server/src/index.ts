@@ -7,9 +7,11 @@ import cookieParse from "cookie-parser"
 import userRoute from "./Router/user"
 const Port = process.env.PORT
 const app = express()
-app.use(express.urlencoded())
+app.use(express.urlencoded({ extended: true }))
 app.use(cookieParse())
-app.use(cors())
+app.use(cors({
+    credentials: true
+}))
 dbConnect()
 app.use("/api", userRoute)
 app.use("/api", productRoute)
