@@ -1,8 +1,12 @@
 import { Schema, model, Document } from "mongoose";
-
+enum Category {
+  Toys = "toys",
+  Beverages = "beverages",
+  HouseHold = "household",
+}
 interface IProduct extends Document {
   name: String;
-  category: String;
+  category: Category;
   price: Number;
   stock: Number;
   createdAt: Date;
@@ -19,7 +23,7 @@ const productSchema: Schema = new Schema<IProduct>({
   category: {
     type: String,
     required: [true, "Please Enter Category!"],
-    minlength: [5, "must be min of 5 character"],
+
   },
   price: {
     type: Number,

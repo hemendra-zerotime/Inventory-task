@@ -6,10 +6,12 @@ export const isAlreadyRegistered = async (req: Request, res: Response, next: Nex
     const { email } = req.body
     try {
         const existingUser = await User.findOne({ email: email })
-        if (existingUser) throw Error
+        if (existingUser) {
+            res.status(409).json({ message: "The email is already registered" })
+        }
         next()
     } catch (error) {
-        res.status(409).json({ message: "The email is already registered" })
+        console.log(error)
     }
 }
 

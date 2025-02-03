@@ -4,12 +4,14 @@ import {
   deleteProductById,
   updateProduct,
   viewAllProduct,
+  viewLowStock,
   viewProductById,
 } from "../controller/product";
 import { Validate, productRules } from "../Middleware/Validation";
 import { isAdmin, isLogin } from "../Middleware/userauth";
 const productRoute = express.Router();
 productRoute.use("/", isLogin, isAdmin);
+productRoute.route("/products/low-stock").get(viewLowStock)
 productRoute
   .route("/products")
   .get(viewAllProduct)
@@ -19,5 +21,4 @@ productRoute
   .get(viewProductById)
   .put(productRules, Validate, updateProduct)
   .delete(deleteProductById);
-
 export default productRoute;

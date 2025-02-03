@@ -7,8 +7,10 @@ export const productRules = [
         .isLength({ min: 5 })
         .withMessage("Name should be of minmum of five character"),
     body("category")
-        .isLength({ min: 5 })
-        .withMessage("category should be of minmum of five character"),
+        .isLength({ min: 3 })
+        .withMessage("category should be of minmum of three character")
+        .isIn(["toy", "bevarages", "household"])
+        .withMessage("category should be in toy, bevarages, household"),
     body("price")
         .notEmpty()
         .withMessage("Price is require"),
@@ -43,7 +45,6 @@ export const validationRulesSignUp = [
 ];
 
 export const Validate = (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.body)
     const err = validationResult(req)
     if (!err.isEmpty()) {
         res.status(400).json({ validationError: err.array() })
