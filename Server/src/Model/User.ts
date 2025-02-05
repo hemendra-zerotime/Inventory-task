@@ -32,6 +32,7 @@ const userSchema = new Schema<IUser>({
     },
     role: {
         type: String,
+        enum: Role,
         default: Role.user
     },
     registeredAt: {
@@ -41,7 +42,7 @@ const userSchema = new Schema<IUser>({
         type: Date
     }
 })
-
 const User = model<IUser>("User", userSchema)
+
 
 export default User

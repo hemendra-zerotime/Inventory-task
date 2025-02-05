@@ -13,7 +13,7 @@ export const loginUser = async (req: Request, res: Response) => {
     const { email, password } = req.body
     try {
         const user = await User.findOne({ email: email })
-        if (user) {
+        if (user !== null) {
             const isPassValid = await bcrypt.compare(password, `${user?.password}`)
             if (isPassValid) {
                 const token: String = await new Promise((resolve, reject) => {

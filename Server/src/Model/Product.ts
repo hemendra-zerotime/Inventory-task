@@ -1,8 +1,8 @@
 import { Schema, model, Document } from "mongoose";
-enum Category {
-  Toys = "toys",
-  Beverages = "beverages",
-  HouseHold = "household",
+export enum Category {
+  Toys = "toys and game",
+  Beverages = "food and beverages",
+  Home = "Home and kitchen",
 }
 interface IProduct extends Document {
   name: String;
@@ -18,12 +18,12 @@ const productSchema: Schema = new Schema<IProduct>({
     type: String,
     unique: true,
     required: [true, "Please Enter Name!"],
-    minlength: [5, "must be min of 5 character"],
+    minlength: [3, "must be min of 3 character"],
   },
   category: {
     type: String,
+    enum: Category,
     required: [true, "Please Enter Category!"],
-
   },
   price: {
     type: Number,
@@ -40,7 +40,7 @@ const productSchema: Schema = new Schema<IProduct>({
     type: Date,
   },
 });
-
+productSchema.index({ name: "text", category: "text" })
 const Product = model<IProduct>("Product", productSchema);
 
 export default Product;

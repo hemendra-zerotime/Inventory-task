@@ -7,6 +7,7 @@ import {
   viewLowStock,
   viewProductById,
 } from "../controller/product";
+
 import { Validate, productRules } from "../Middleware/Validation";
 import { isAdmin, isLogin } from "../Middleware/userauth";
 const productRoute = express.Router();

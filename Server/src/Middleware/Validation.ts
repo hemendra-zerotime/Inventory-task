@@ -1,16 +1,17 @@
 import { body, validationResult } from "express-validator";
 
 import { NextFunction, Request, Response } from "express";
+import { Category } from "../Model/Product";
 export const productRules = [
 
     body("name")
-        .isLength({ min: 5 })
-        .withMessage("Name should be of minmum of five character"),
+        .isLength({ min: 3 })
+        .withMessage("Name should be of minmum of three character"),
     body("category")
         .isLength({ min: 3 })
         .withMessage("category should be of minmum of three character")
-        .isIn(["toy", "bevarages", "household"])
-        .withMessage("category should be in toy, bevarages, household"),
+        .isIn([Category.Beverages, Category.Home, Category.Toys])
+        .withMessage(`category should be in ${Category.Beverages}, ${Category.Home}, ${Category.Toys}`),
     body("price")
         .notEmpty()
         .withMessage("Price is require"),
