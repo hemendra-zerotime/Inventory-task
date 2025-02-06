@@ -1,7 +1,7 @@
 import { body, validationResult } from "express-validator";
 
 import { NextFunction, Request, Response } from "express";
-import { Category } from "../Model/Product";
+import { Category } from "../Model/productModel";
 export const productRules = [
 
     body("name")

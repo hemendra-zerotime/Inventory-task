@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import Product from "../Model/Product";
+import Product from "../Model/productModel";
 
 export const addProduct = async (
   req: Request,
@@ -58,7 +58,6 @@ export const viewAllProduct = async (
       });
     }
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };

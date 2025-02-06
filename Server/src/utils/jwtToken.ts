@@ -1,5 +1,5 @@
 import jwt, { JwtPayload } from "jsonwebtoken"
-import { IUser } from "../Model/User"
+import { IUser } from "../Model/userModel"
 
 export const generateToken = (user: IUser): String => {
     return jwt.sign({ id: user._id, role: user.role }, `${process.env.SECRET_KEY}`, { expiresIn: "3h" })

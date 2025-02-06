@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import User from "../Model/User";
+import User from "../Model/userModel";
 import bcrypt from "bcrypt";
 import { generateToken, verifyToken } from "../utils/jwtToken";
 declare global {

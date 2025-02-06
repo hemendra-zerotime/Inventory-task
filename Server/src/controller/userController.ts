@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express"
-import User from "../Model/User"
+import User from "../Model/userModel"
 import bcrypt from "bcrypt"
 
 export const isAlreadyRegistered = async (req: Request, res: Response, next: NextFunction) => {
@@ -11,7 +11,6 @@ export const isAlreadyRegistered = async (req: Request, res: Response, next: Nex
         }
         next()
     } catch (error) {
-        console.log(error)
         next(error)
     }
 }
@@ -32,7 +31,6 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
         })
 
     } catch (error) {
-        console.log(error)
         next(error)
     }
 }
