@@ -14,7 +14,6 @@ interface IUser extends Document {
 }
 
 
-
 const userSchema = new Schema<IUser>({
     username: {
         type: String,

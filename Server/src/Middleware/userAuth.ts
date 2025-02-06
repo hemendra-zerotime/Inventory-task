@@ -9,7 +9,9 @@ declare global {
         }
     }
 }
-export const loginUser = async (req: Request, res: Response) => {
+
+//traditional authentication
+export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body
     try {
         const user = await User.findOne({ email: email })
@@ -17,7 +19,7 @@ export const loginUser = async (req: Request, res: Response) => {
             const isPassValid = await bcrypt.compare(password, `${user?.password}`)
             if (isPassValid) {
                 const token: String = await new Promise((resolve, reject) => {
-                    jwt.sign({ id: user._id, role: user.role }, `${process.env.SECRET_KEY}`, { expiresIn: "1h" }, (err, token) => {
+                    jwt.sign({ id: user._id }, `${process.env.SECRET_KEY}`, { expiresIn: "3h" }, (err, token) => {
                         if (err) reject(err)
                         else
                             resolve(`${token}`)
@@ -39,7 +41,7 @@ export const loginUser = async (req: Request, res: Response) => {
             })
         }
     } catch (error) {
-        console.log(error)
+        next(error)
     }
 }
 
@@ -65,6 +67,9 @@ export const isLogin = async (req: Request, res: Response, next: NextFunction) =
             if (error instanceof JsonWebTokenError) {
                 res.status(401).json({ message: error.message })
             }
+            else {
+                next(error)
+            }
         }
     }
     else {
@@ -73,7 +78,7 @@ export const isLogin = async (req: Request, res: Response, next: NextFunction) =
 }
 
 
-//for role based Authentication
+//authorization
 export const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
     const { userId } = req
     try {
@@ -86,6 +91,6 @@ export const isAdmin = async (req: Request, res: Response, next: NextFunction) =
         }
 
     } catch (error) {
-        console.log(error)
+        next(error)
     }
 }

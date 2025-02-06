@@ -4,22 +4,22 @@ import {
   deleteProductById,
   updateProduct,
   viewAllProduct,
-  viewLowStock,
+  viewAnalytics,
   viewProductById,
 } from "../controller/product";
 
-import { Validate, productRules } from "../Middleware/Validation";
-import { isAdmin, isLogin } from "../Middleware/userauth";
+import { validateInput, productRules } from "../Middleware/inputValidation";
+import { isAdmin, isLogin } from "../Middleware/userAuth";
 const productRoute = express.Router();
 productRoute.use("/", isLogin, isAdmin);
-productRoute.route("/products/low-stock").get(viewLowStock)
+productRoute.route("/products/analytics").get(viewAnalytics)
 productRoute
   .route("/products")
   .get(viewAllProduct)
-  .post(productRules, Validate, addProduct);
+  .post(productRules, validateInput, addProduct);
 productRoute
   .route("/products/:id")
   .get(viewProductById)
-  .put(productRules, Validate, updateProduct)
+  .put(productRules, validateInput, updateProduct)
   .delete(deleteProductById);
 export default productRoute;

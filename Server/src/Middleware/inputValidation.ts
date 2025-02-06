@@ -45,7 +45,7 @@ export const validationRulesSignUp = [
         .withMessage("role should be user or admin")
 ];
 
-export const Validate = (req: Request, res: Response, next: NextFunction) => {
+export const validateInput = (req: Request, res: Response, next: NextFunction) => {
     const err = validationResult(req)
     if (!err.isEmpty()) {
         res.status(400).json({ validationError: err.array() })

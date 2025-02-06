@@ -12,10 +12,11 @@ export const isAlreadyRegistered = async (req: Request, res: Response, next: Nex
         next()
     } catch (error) {
         console.log(error)
+        next(error)
     }
 }
 
-export const createUser = async (req: Request, res: Response) => {
+export const createUser = async (req: Request, res: Response, next: NextFunction) => {
     const { username, email, password, role } = req.body
     try {
         const hashpass = await bcrypt.hash(password, 10)
@@ -32,6 +33,7 @@ export const createUser = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error)
+        next(error)
     }
 }
 
