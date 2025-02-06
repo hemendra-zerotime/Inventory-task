@@ -15,9 +15,8 @@ app.use(cors({
 dbConnect()
 app.use("/api", userRoute)
 app.use("/api", productRoute)
-app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
-    console.error(err.stack)
-    res.status(500).json({ message: "Internal server error" })
+app.use("*", (req: Request, res: Response) => {
+    res.status(404).json({ message: `cannot find the url ${req.originalUrl}` })
 })
 app.listen(Port, () => {
     console.log(`server stated at http://localhost:${Port}`)
