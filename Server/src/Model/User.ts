@@ -3,11 +3,12 @@ enum Role {
     user = "user",
     admin = "admin"
 }
-interface IUser extends Document {
+export interface IUser extends Document {
     username: String,
     email: String,
     password: String,
     registeredAt: Date,
+    createdAt: Date,
     updatedAt: Date
     role: Role
 

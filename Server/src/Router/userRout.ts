@@ -4,7 +4,7 @@ import {
     validationRulesSignUp,
     validationRulesLogIn,
 } from "../Middleware/inputValidation";
-import { createUser, isAlreadyRegistered } from "../controller/user";
+import { createUser, isAlreadyRegistered } from "../controller/userController";
 import { loginUser } from "../Middleware/userAuth";
 
 const userRoute = express.Router();

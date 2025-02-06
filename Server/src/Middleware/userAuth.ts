@@ -1,96 +1,96 @@
-import { NextFunction, Request, Response } from 'express'
-import User from '../Model/User'
-import bcrypt from "bcrypt"
-import jwt, { JsonWebTokenError, JwtPayload } from 'jsonwebtoken'
+import { NextFunction, Request, Response } from "express";
+import User from "../Model/User";
+import bcrypt from "bcrypt";
+import { generateToken, verifyToken } from "../utils/jwtToken";
 declare global {
     namespace Express {
         interface Request {
-            userId: String
+            userId: String;
         }
     }
 }
 
 //traditional authentication
-export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password } = req.body
+export const loginUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { email, password } = req.body;
     try {
-        const user = await User.findOne({ email: email })
+        const user = await User.findOne({ email: email });
         if (user !== null) {
-            const isPassValid = await bcrypt.compare(password, `${user?.password}`)
+            const isPassValid = await bcrypt.compare(password, `${user?.password}`);
             if (isPassValid) {
-                const token: String = await new Promise((resolve, reject) => {
-                    jwt.sign({ id: user._id }, `${process.env.SECRET_KEY}`, { expiresIn: "3h" }, (err, token) => {
-                        if (err) reject(err)
-                        else
-                            resolve(`${token}`)
+                const token = generateToken(user);
+                res
+                    .cookie("authtoken", token, {
+                        secure: true,
+                        httpOnly: true,
+                        sameSite: "none",
                     })
-                })
-                res.cookie("authtoken", token, { secure: true, httpOnly: true, sameSite: "none" }).status(200).json({
-                    message: "login success",
-                })
-            }
-            else {
+                    .status(200)
+                    .json({
+                        message: "login success",
+                    });
+            } else {
                 res.status(401).json({
-                    message: "Invalid Credential!"
-                })
+                    message: "Invalid Credential!",
+                });
             }
-        }
-        else if (!user) {
+        } else if (!user) {
             res.status(401).json({
-                message: "Invalid Credential!"
-            })
+                message: "Invalid Credential!",
+            });
         }
     } catch (error) {
-        next(error)
+        next(error);
     }
-}
+};
 
 //token based authentication
-export const isLogin = async (req: Request, res: Response, next: NextFunction) => {
-    const authtoken = req.headers.authorization?.split(" ")[1]
-    if (authtoken) {
+export const isLogin = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const authtoken = req.headers.authorization?.split(" ")[1];
+    if (authtoken == undefined) {
+        res.status(401).json({ message: "authentication require" });
+    } else {
         try {
-            const decode = await new Promise<JwtPayload | string>((resolve, reject) => {
-                jwt.verify(authtoken, process.env.SECRET_KEY as string, (err: JsonWebTokenError | null, decoded: JwtPayload | string | undefined) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(decoded as JwtPayload);
-                    }
-                });
-            });
+            const decode = verifyToken(authtoken);
             if (typeof decode === "object") {
-                req.userId = decode.id
-                next()
+                req.userId = decode.id;
+                next();
             }
         } catch (error) {
-            if (error instanceof JsonWebTokenError) {
-                res.status(401).json({ message: error.message })
-            }
-            else {
-                next(error)
+            if (error instanceof Error) {
+                res.status(401).json({ message: error.message });
+            } else {
+                next(error);
             }
         }
     }
-    else {
-        res.status(401).json({ message: "authentication require" })
-    }
-}
-
+};
 
 //authorization
-export const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
-    const { userId } = req
+export const isAdmin = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { userId } = req;
     try {
-        const user = await User.findOne({ _id: userId }, { _id: 0, role: 1 })
+        const user = await User.findOne({ _id: userId }, { _id: 0, role: 1 });
         if (user == null) {
-            res.status(401).json({ message: "authentication required" })
+            res.status(401).json({ message: "authentication required" });
+        } else {
+            user.role === "admin"
+                ? next()
+                : res.status(403).json({ message: "only admin can access" });
         }
-        else {
-            user.role === "admin" ? next() : res.status(403).json({ message: "only admin can access" })
-        }
-
     } catch (error) {
-        next(error)
+        next(error);
     }
-}
+};

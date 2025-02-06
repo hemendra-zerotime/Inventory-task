@@ -23,8 +23,7 @@ export const addProduct = async (
     if (error instanceof Error) {
       if (error.message.split(" ")[0] === "E11000")
         res.status(409).json({ message: "Product already in stock" });
-    }
-    else {
+    } else {
       next(error);
     }
   }
@@ -36,7 +35,6 @@ export const viewAllProduct = async (
   next: NextFunction
 ) => {
   const { query } = req;
-
   try {
     if (query.name !== undefined) {
       let data = await Product.find({ $text: { $search: `${query.name}` } });
@@ -134,11 +132,13 @@ export const updateProduct = async (
       { _id: id },
       { $set: { name, category, price, stock, updatedAt: Date.now() } }
     );
+
     if (existingData == null) {
       res.status(400).json({
         message: "Invalid Product update failed",
       });
     }
+
     res.status(200).json({
       message: "data has been updated",
     });

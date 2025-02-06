@@ -6,7 +6,7 @@ import {
   viewAllProduct,
   viewAnalytics,
   viewProductById,
-} from "../controller/product";
+} from "../controller/productController";
 
 import { validateInput, productRules } from "../Middleware/inputValidation";
 import { isAdmin, isLogin } from "../Middleware/userAuth";
